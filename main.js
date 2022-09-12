@@ -14,7 +14,7 @@ function getWebSocketServer() {
     var socket = new WebSocket(getWebSocketServer())
     socket.addEventListener("message", (event)=>{
         let message_from_server = event.data
-        console.log(message_from_server.type)
+        console.log(message_from_server)
         switch(message_from_server.type){
             case "message_recv":
                 var new_node = document.createElement("p")
