@@ -11,7 +11,7 @@ def remove_ws_from_rooms(ws):
     for r in rooms:
         if ws in rooms[r]:
             rooms[r].remove(ws)
-
+    where_is[ws] = None
 async def handler(ws):
     while True:
         message_from_client = await ws.recv()
@@ -34,12 +34,14 @@ async def handler(ws):
         elif message_from_client["type"] == "join_req":
             remove_ws_from_rooms(ws)
             rooms[message_from_client["name"]].append(ws)
+            where_is[ws] = message_from_client["name"]
             ws.send(json.dumps({"type":"create_resp", "content":"successfully joined room with name {}".format(message_from_client["name"])}))
 
         elif message_from_client["type"] == "create_req":
             if message_from_client["name"] not in list(rooms.keys()):
                 remove_ws_from_rooms(ws)
                 rooms[message_from_client["name"]] = [ws]
+                where_is[ws] = message_from_client["name"]
                 ws.send(json.dumps({"type":"create_resp", "content":"successfully created and joined room with name {}".format(message_from_client["name"])}))
         
         elif message_from_client["type"] == "leave_req":
