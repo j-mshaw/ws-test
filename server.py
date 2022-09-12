@@ -21,7 +21,8 @@ async def handler(ws):
             for s in subscribers:
                 print(s)
             print()
-
+        elif message_from_client["type"] == "clear":
+            subscribers.clear()
 async def main():
     loop = asyncio.get_running_loop()
     stop = loop.create_future()
