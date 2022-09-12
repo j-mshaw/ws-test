@@ -21,7 +21,7 @@ async def handler(ws):
         print(message_from_client)
         message_from_client = json.loads(message_from_client)
         if message_from_client["type"] == "send_msg":
-            room_subs = rooms[where_is[ws]]
+            room_subs = rooms[where_is[ws]]["subs"]
             for sub in room_subs:
                 await sub.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
         
@@ -35,8 +35,11 @@ async def handler(ws):
             for r in rooms:
                 rooms[r].clear()
         elif message_from_client["type"] == "join_req":
+            if not rooms[message_from_client["name"]] in rooms:
+                await ws.send(json.dumps({"type":"create_resp", "content":"failed to joined room with name {}: Room does not exist".format(message_from_client["name"])}))
+
             if not rooms[message_from_client["name"]]["password"] == message_from_client["password"]:
-                await ws.send(json.dumps({"type":"create_resp", "content":"failed to joined room with name {}".format(message_from_client["name"])}))
+                await ws.send(json.dumps({"type":"create_resp", "content":"failed to joined room with name {}: Invalid password".format(message_from_client["name"])}))
             else:
                 remove_ws_from_rooms(ws)
                 rooms[message_from_client["name"]]["subs"].append(ws)
@@ -52,7 +55,9 @@ async def handler(ws):
                 }#[ws]
                 where_is[ws] = message_from_client["name"]
                 await ws.send(json.dumps({"type":"create_resp", "content":"successfully created and joined room with name {}".format(message_from_client["name"])}))
-        
+            else:
+                await ws.send(json.dumps({"type":"create_resp", "content":"failed to create room with name {}: name taken".format(message_from_client["name"])}))
+
         elif message_from_client["type"] == "leave_req":
             remove_ws_from_rooms(ws)
 
