@@ -16,7 +16,7 @@ async def handler(ws):
         message_from_client = json.loads(message_from_client)
         if message_from_client["type"] == "send_msg":
             for sub in subscribers:
-                await ws.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
+                await sub.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
         elif message_from_client["type"] == "query":
             for s in subscribers:
                 print(s)
