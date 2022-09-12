@@ -1,6 +1,6 @@
 function getWebSocketServer() {
     if (window.location.host === "j-mshaw.github.io") {
-      return "wss://jshaw-ws-test.herokuapp.com:8001.herokuapp.com/";
+      return "wss://jshaw-ws-test.herokuapp.com/";
     } else if (window.location.host === "localhost:8000") {
       return "ws://localhost:8001/";
     } else {
