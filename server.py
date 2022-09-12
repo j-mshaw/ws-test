@@ -35,7 +35,7 @@ async def handler(ws):
             for r in rooms:
                 rooms[r].clear()
         elif message_from_client["type"] == "join_req":
-            if not rooms[message_from_client["name"]] in rooms:
+            if not rooms[message_from_client["name"]] in list(rooms.keys()):
                 await ws.send(json.dumps({"type":"create_resp", "content":"failed to joined room with name {}: Room does not exist".format(message_from_client["name"])}))
 
             if not rooms[message_from_client["name"]]["password"] == message_from_client["password"]:
