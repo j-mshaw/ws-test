@@ -3,10 +3,19 @@
     <head>
         <title>simple Chat client</title>
         <script src="main.js"></script>
+        <link rel="stylesheet" href="main.css">
     </head>
     <body onload="setup()">
+        <div id="sub_controls">
+            <button id="create">Create Room</button>
+            <input type="text" id="create_input">
+            <br>
+            <button id="join">Join Room</button>
+            <input type="text" id="join_input">
+            <button id="leave">Leave Room></button>
+        </div>
         <div id="chat-area">
-
+            
         </div>
         <div id="ctrls">
             <input type="text" id="message">

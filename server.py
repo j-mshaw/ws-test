@@ -4,25 +4,47 @@ import asyncio
 import os
 import signal
 
-subscribers = []
+rooms = {}
+where_is = {}
 
-
+def remove_ws_from_rooms(ws):
+    for r in rooms:
+        if ws in rooms[r]:
+            rooms[r].remove(ws)
 
 async def handler(ws):
-    subscribers.append(ws)
     while True:
         message_from_client = await ws.recv()
         print(message_from_client)
         message_from_client = json.loads(message_from_client)
         if message_from_client["type"] == "send_msg":
-            for sub in subscribers:
+            room_subs = rooms[where_is[ws]]
+            for sub in room_subs:
                 await sub.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
+        
         elif message_from_client["type"] == "query":
-            for s in subscribers:
-                print(s)
+            for r in rooms:
+                print(r)
+                for s in rooms[r]:
+                    print("\t" + str(s))
             print()
         elif message_from_client["type"] == "clear":
-            subscribers.clear()
+            for r in rooms:
+                rooms[r].clear()
+        elif message_from_client["type"] == "join_req":
+            remove_ws_from_rooms(ws)
+            rooms[message_from_client["name"]].append(ws)
+            ws.send(json.dumps({"type":"create_resp", "content":"successfully joined room with name {}".format(message_from_client["name"])}))
+
+        elif message_from_client["type"] == "create_req":
+            if message_from_client["name"] not in list(rooms.keys()):
+                remove_ws_from_rooms(ws)
+                rooms[message_from_client["name"]] = [ws]
+                ws.send(json.dumps({"type":"create_resp", "content":"successfully created and joined room with name {}".format(message_from_client["name"])}))
+        
+        elif message_from_client["type"] == "leave_req":
+            remove_ws_from_rooms(ws)
+
 async def main():
     loop = asyncio.get_running_loop()
     stop = loop.create_future()

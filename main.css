@@ -1,0 +1,11 @@
+#chat-area{
+    width: 400px;
+    height:400px;
+    overflow-y:auto;
+    border-radius: 1px;
+    border-style:solid;
+}
+
+#sub_controls{
+    margin-bottom: 25px;
+}
