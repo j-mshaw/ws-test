@@ -13,7 +13,7 @@ function getWebSocketServer() {
     
     var socket = new WebSocket(getWebSocketServer())
     socket.addEventListener("message", (event)=>{
-        let message_from_server = event.data
+        let message_from_server = JSON.parse(event.data)
         console.log(message_from_server)
         switch(message_from_server.type){
             case "message_recv":
