@@ -1,8 +1,12 @@
 import json
 import websockets
 import asyncio
+import os
+import signal
 
 subscribers = []
+
+
 
 async def handler(ws):
     subscribers.append(ws)
@@ -15,8 +19,16 @@ async def handler(ws):
                 await ws.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
 
 async def main():
-    async with websockets.serve(handler,"192.168.56.1",8001):
-        await asyncio.Future()
+    loop = asyncio.get_running_loop()
+    stop = loop.create_future()
+    
+    #when termination signal is recieved, the future is resolved and we move past await stop in the serve block
+    loop.add_signal_handler(signal.SIGTERM, stop.set_result, None)
+
+    port = int(os.environ.get("PORT", "8001"))
+    
+    async with websockets.serve(handler,"",port):
+        await stop
 
 if __name__ == "__main__":
     asyncio.run(main())
