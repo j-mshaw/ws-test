@@ -39,7 +39,7 @@ function getWebSocketServer() {
 
     var join_button = document.getElementById("join")
     join_button.onclick = () => {
-      var name_field = document.getElementById("create_input")
+      var name_field = document.getElementById("join_input")
       var name = name_field.value
       socket.send(JSON.stringify({"type": "join_req", "name":name}))
     }
