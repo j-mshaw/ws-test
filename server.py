@@ -35,14 +35,14 @@ async def handler(ws):
             remove_ws_from_rooms(ws)
             rooms[message_from_client["name"]].append(ws)
             where_is[ws] = message_from_client["name"]
-            ws.send(json.dumps({"type":"create_resp", "content":"successfully joined room with name {}".format(message_from_client["name"])}))
+            await ws.send(json.dumps({"type":"create_resp", "content":"successfully joined room with name {}".format(message_from_client["name"])}))
 
         elif message_from_client["type"] == "create_req":
             if message_from_client["name"] not in list(rooms.keys()):
                 remove_ws_from_rooms(ws)
                 rooms[message_from_client["name"]] = [ws]
                 where_is[ws] = message_from_client["name"]
-                ws.send(json.dumps({"type":"create_resp", "content":"successfully created and joined room with name {}".format(message_from_client["name"])}))
+                await ws.send(json.dumps({"type":"create_resp", "content":"successfully created and joined room with name {}".format(message_from_client["name"])}))
         
         elif message_from_client["type"] == "leave_req":
             remove_ws_from_rooms(ws)
