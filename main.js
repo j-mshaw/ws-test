@@ -14,6 +14,7 @@ function getWebSocketServer() {
     var socket = new WebSocket(getWebSocketServer())
     socket.addEventListener("message", (event)=>{
         let message_from_server = event.data
+        console.log(message_from_server.type)
         switch(message_from_server.type){
             case "message_recv":
                 var new_node = document.createElement("p")
@@ -21,10 +22,6 @@ function getWebSocketServer() {
                 chat_area.appendChild(new_node)
                 break
         }
-        
-        var new_node = document.createElement("p")
-        new_node.innerText = event.data
-        chat_area.appendChild(new_node)
     });
 
     var send_button = document.getElementById("send")
