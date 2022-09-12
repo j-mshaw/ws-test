@@ -17,6 +17,10 @@ async def handler(ws):
         if message_from_client["type"] == "send_msg":
             for sub in subscribers:
                 await ws.send(json.dumps({"type": "recv_msg", "content":message_from_client["content"]}))   
+        elif message_from_client["type"] == "query":
+            for s in subscribers:
+                print(s)
+            print()
 
 async def main():
     loop = asyncio.get_running_loop()
