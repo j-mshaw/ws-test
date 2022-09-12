@@ -16,7 +16,7 @@ function getWebSocketServer() {
         let message_from_server = JSON.parse(event.data)
         console.log(message_from_server)
         switch(message_from_server.type){
-            case "message_recv":
+            case "recv_msg":
                 var new_node = document.createElement("p")
                 new_node.innerText = message_from_server.content
                 chat_area.appendChild(new_node)
