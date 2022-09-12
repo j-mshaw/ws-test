@@ -39,7 +39,7 @@ async def handler(ws):
                 await ws.send(json.dumps({"type":"create_resp", "content":"failed to joined room with name {}".format(message_from_client["name"])}))
             else:
                 remove_ws_from_rooms(ws)
-                rooms[message_from_client["name"]].append(ws)
+                rooms[message_from_client["name"]]["subs"].append(ws)
                 where_is[ws] = message_from_client["name"]
                 await ws.send(json.dumps({"type":"create_resp", "content":"successfully joined room with name {}".format(message_from_client["name"])}))
 
