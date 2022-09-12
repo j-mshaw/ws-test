@@ -39,16 +39,25 @@ function getWebSocketServer() {
 
     var join_button = document.getElementById("join")
     join_button.onclick = () => {
-      var name_field = document.getElementById("join_input")
+      var name_field = document.getElementById("name_input")
+      var password_field = document.getElementById("password_input")
+      var password = password_field.value
       var name = name_field.value
-      socket.send(JSON.stringify({"type": "join_req", "name":name}))
+      name_field.value = ""
+      password_field.value = ""
+      //TODO: Plaintext passwords is a huge nono, but this project is about sockets, not security
+      socket.send(JSON.stringify({"type": "join_req", "name":name, "password":password}))
     }
 
     var create_button = document.getElementById("create")
     create_button.onclick = () => {
-      var name_field = document.getElementById("create_input")
+      var name_field = document.getElementById("name_input")
+      var password_field = document.getElementById("password_input")
+      var password = password_field.value
       var name = name_field.value
-      socket.send(JSON.stringify({"type": "create_req", "name":name}))
+      name_field.value = ""
+      password_field.value = ""
+      socket.send(JSON.stringify({"type": "create_req", "name":name, "password":password}))
     }
     
     var leave_button = document.getElementById("leave")
